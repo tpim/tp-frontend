@@ -5,7 +5,9 @@
 
   let obj = {
     a: 1,
-    b: 2,
+    b: {
+      c: 1,
+    },
   };
 
   function reactive(obj) {
@@ -17,7 +19,7 @@
         console.log(obj, prop);
         useReactivities.push([obj, prop]);
         if (typeof obj[prop] === "object") {
-          reactivities(obj[prop]);
+          return reactive(obj[prop]);
         }
         return obj[prop];
       },
@@ -27,6 +29,7 @@
         if (handlers.get(obj)) {
           if (handlers.get(obj).get(prop)) {
             for (let handler of handlers.get(obj).get(prop)) {
+              console.log(handler);
               handler();
             }
           }
@@ -58,7 +61,7 @@
   let dummy;
 
   effect(() => {
-    dummy = proxy.a;
+    dummy = proxy.b.c;
   });
 
   console.log(dummy);
